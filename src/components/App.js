@@ -4,10 +4,10 @@ import Currentbook from './booksView/Currentbook';
 import cross from '../images/x.png';
 import heart from '../images/heart.png';
 import logo from '../images/LibraryTinder.png';
+import BookForm from './booksView/BookForm';
 class App extends React.Component{
   state = {
     books: null,
-    typeVal: "",
     type: "", 
     currentBookValue: 0,
     liked: [],
@@ -25,17 +25,12 @@ class App extends React.Component{
     )
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.getBook(this.state.typeVal);
-    this.setState({type: this.state.typeVal});
+  handleSubmit = (typeVal) => {
+    this.getBook(typeVal);
+    this.setState({type: typeVal});
     console.log("Submitted");
   }
-  handleTypeChange = (event) =>{
-      this.setState({
-          typeVal: event.target.value
-      })
-  }
+
   onDislikeClick = () => {
     const a = this.state.currentBookValue+1;
     this.setState({currentBookValue: a})
@@ -43,9 +38,8 @@ class App extends React.Component{
   onLikeClick = () => {
     const a = this.state.currentBookValue+1;
     this.setState({currentBookValue: a, 
-      liked: this.state.liked.concat(this.state.books[this.state.currentBookValue-1])})
-
-
+      liked: this.state.liked.concat(this.state.books[this.state.currentBookValue-1])
+    });
   }
   handleOutput = () => {
     if(this.state.books !== null){
@@ -60,7 +54,6 @@ class App extends React.Component{
         })
         return(
           <div>
-            
             {bookList}
           </div>
         )
@@ -68,7 +61,7 @@ class App extends React.Component{
       return (
         <div>
           <Currentbook currentBookValue={this.state.currentBookValue} books={this.state.books} />
-          <div class="row alignButtons">
+          <div className="row alignButtons">
             <img onClick={this.onDislikeClick} className="cross img-responsive" src={cross} alt='alternate'/>
             <img onClick={this.onLikeClick} className="heart img-responsive" src={heart} alt='alternate'/>         
           </div>
@@ -76,21 +69,10 @@ class App extends React.Component{
       )           
     }else{
       return(
-        <div className="form">
-            <img className="img-responsive" src={logo} />
-
-            <form onSubmit={this.handleSubmit}>
-                <div className="row alignButtons">
-                  <div className="form-group">
-                    <label for="typeInput">
-                    Type:          
-                    </label>
-                    <input id="typeInput" className="typeInput" type="text" value={this.state.typeInput} onChange={this.handleTypeChange}></input>
-                  </div>
-                  <button className ="typeButtonInput btn btn-primary" type="submit" value="Submit">Submit</button>
-                </div>
-            </form>
-          </div>
+        <div>
+          <img className="img-responsive" src={logo} />
+          <BookForm sub={this.handleSubmit}/>
+        </div>
       );
     }
   }
